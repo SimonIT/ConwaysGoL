@@ -1,23 +1,21 @@
-import org.fusesource.jansi.Ansi;
-import org.fusesource.jansi.AnsiConsole;
-
+import java.awt.*;
 import java.util.Random;
 
 public class GameOfWildlife implements IGameOfLife {
     Cell[][] grid = new Cell[IGameOfLife.SIZE][IGameOfLife.SIZE];
 
     public static void main(String[] args) {
-        AnsiConsole.systemInstall();
         GameOfWildlife gOL = new GameOfWildlife();
         gOL.init();
+        VisualGameOfLife visualGameOfLife = new VisualGameOfLife(gOL.getGrid());
         while (true) {
-            gOL.showGrid();
+            gOL.runGeneration();
             try {
-                Thread.sleep(100);
+                Thread.sleep(500);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            gOL.runGeneration();
+            visualGameOfLife.refresh(gOL.getGrid());
         }
     }
 
@@ -27,24 +25,16 @@ public class GameOfWildlife implements IGameOfLife {
         for (int y = 0; y < grid.length; ++y) {
             for (int x = 0; x < grid.length; ++x) {
                 if (rand.nextBoolean()) {
-                    grid[y][x] = rand.nextBoolean() ? new Cell(Ansi.Color.YELLOW, true) : new Cell(Ansi.Color.MAGENTA, true);
+                    grid[y][x] = new Cell(new Color(rand.nextInt(256), rand.nextInt(256), rand.nextInt(256)), true);
                 } else {
-                    grid[y][x] = new Cell(Ansi.Color.BLACK, false);
+                    grid[y][x] = new Cell(Color.BLACK, false);
                 }
             }
         }
     }
 
     @Override
-    public void showGrid() {
-        System.out.print(Ansi.ansi().eraseScreen());
-        for (Cell[] row : grid) {
-            for (Cell state : row) {
-                System.out.print(Ansi.ansi().fg(state.getColor()).a('█'));
-            }
-            System.out.println();
-        }
-    }
+    public void showGrid() { }
 
     @Override
     public void setAlive(int x, int y) {
@@ -74,8 +64,9 @@ public class GameOfWildlife implements IGameOfLife {
         return neighborsTotal;
     }
 
-    public Ansi.Color getDominantColor(int x, int y) {
-        int color1Count = 0, color2Count = 0;
+    public int getLiveNeighborsAndMixColor(int x, int y, Color c) {
+        int neighbors = 0;
+        int r = 0, g = 0, b = 0;
         for (int yCheck = -1; yCheck < 2; ++yCheck) {
             for (int xCheck = -1; xCheck < 2; ++xCheck) {
                 if (yCheck == 0 && xCheck == 0) {
@@ -84,43 +75,48 @@ public class GameOfWildlife implements IGameOfLife {
                 int xNeighbor = (x + xCheck + IGameOfLife.SIZE) % IGameOfLife.SIZE;
                 int yNeighbor = (y + yCheck + IGameOfLife.SIZE) % IGameOfLife.SIZE;
                 if (this.grid[yNeighbor][xNeighbor].getAlive()) {
-                    if (this.grid[yNeighbor][xNeighbor].getColor() == Ansi.Color.YELLOW) {
-                        ++color1Count;
-                    } else {
-                        ++color2Count;
-                    }
+                    ++neighbors;
+                    r += this.grid[yNeighbor][xNeighbor].getColor().getRed();
+                    g += this.grid[yNeighbor][xNeighbor].getColor().getGreen();
+                    b += this.grid[yNeighbor][xNeighbor].getColor().getBlue();
                 }
             }
         }
-        if (color1Count > color2Count) {
-            return Ansi.Color.YELLOW;
-        }
-        return Ansi.Color.MAGENTA;
+        c = new Color(Math.round((float) r / neighbors), Math.round((float) g / neighbors), Math.round((float) b / neighbors));
+        return neighbors;
     }
 
     @Override
     public void runGeneration() {
-        for (int y = 0; y < grid.length; ++y) {
-            for (int x = 0; x < grid.length; ++x) {
-                int neighborsAlive = getLiveNeighbors(x, y);
-                if (grid[y][x].getAlive()) {
-                    if (neighborsAlive < 2 || neighborsAlive > 3) {
-                        this.setDead(x, y);
-                        this.grid[y][x].setColor(Ansi.Color.BLACK);
-                    }
+        Cell[][] newGrid = new Cell[IGameOfLife.SIZE][IGameOfLife.SIZE];
+        for (int y = 0; y < IGameOfLife.SIZE; ++y) {
+            for (int x = 0; x < IGameOfLife.SIZE; ++x) {
+                Color mixedColor = new Color(grid[y][x].getColor().getRed(), grid[y][x].getColor().getGreen(), grid[y][x].getColor().getBlue());
+                int neighborsAlive = getLiveNeighborsAndMixColor(x, y, mixedColor);
+
+                if (neighborsAlive < 2 || neighborsAlive > 3) {
+                    newGrid[y][x].setColor(Color.BLACK);
+                    newGrid[y][x].setAlive(false);
+                } else if (neighborsAlive == 3) {
+                    newGrid[y][x].setColor(mixedColor);
+                    newGrid[y][x].setAlive(false);
                 } else {
-                    if (neighborsAlive == 3) {
-                        this.setAlive(x, y);
-                        this.grid[y][x].setColor(getDominantColor(x, y));
+                    if (grid[y][x].getAlive()) {
+                        newGrid[y][x].setColor(mixedColor);
+                    } else {
+                        newGrid[y][x].setColor(Color.BLACK);
                     }
                 }
+
+
             }
         }
+        this.grid = newGrid;
     }
 
     @Override
-    public void runGenerations(int howMany_) {
-        for (int i = 0; i < howMany_; ++i) {
+    public void runGenerations(int howMany) {
+        for (int i = 0; i < howMany; ++i) {
             runGeneration();
         }
     }

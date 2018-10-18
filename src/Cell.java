@@ -1,11 +1,11 @@
-import org.fusesource.jansi.Ansi;
+import java.awt.Color;
 
 public class Cell {
     private int age;
-    private Ansi.Color color;
+    private Color color;
     private boolean alive;
 
-    Cell(Ansi.Color color, boolean alive) {
+    Cell(Color color, boolean alive) {
         this.age = 0;
         this.color = color;
         this.alive = alive;
@@ -19,11 +19,11 @@ public class Cell {
         this.age = age;
     }
 
-    public Ansi.Color getColor() {
+    public Color getColor() {
         return color;
     }
 
-    public void setColor(Ansi.Color color) {
+    public void setColor(Color color) {
         this.color = color;
     }
 

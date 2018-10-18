@@ -6,14 +6,15 @@ public class GameOfLife implements IGameOfLife {
     public static void main(String[] args) {
         GameOfLife gOL = new GameOfLife();
         gOL.init();
+        VisualGameOfLife visualGameOfLife = new VisualGameOfLife(gOL.getGrid());
         while (true) {
-            gOL.showGrid();
+            gOL.runGeneration();
             try {
                 Thread.sleep(500);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            gOL.runGeneration();
+            visualGameOfLife.refresh(gOL.grid);
         }
     }
 
@@ -55,7 +56,7 @@ public class GameOfLife implements IGameOfLife {
         int neighborsTotal = 0;
         for (int yCheck = -1; yCheck < 2; ++yCheck) {
             for (int xCheck = -1; xCheck < 2; ++xCheck) {
-                if (yCheck == 0 && xCheck == 0) {
+                if (xCheck == 0 && yCheck == 0) {
                     continue;
                 }
                 int xNeighbor = (x + xCheck + IGameOfLife.SIZE) % IGameOfLife.SIZE;
@@ -70,16 +71,20 @@ public class GameOfLife implements IGameOfLife {
 
     @Override
     public void runGeneration() {
-        for (int y = 0; y < grid.length; ++y) {
-            for (int x = 0; x < grid.length; ++x) {
+        int[][] newGrid = new int[IGameOfLife.SIZE][IGameOfLife.SIZE];
+        for (int y = 0; y < IGameOfLife.SIZE; ++y) {
+            for (int x = 0; x < IGameOfLife.SIZE; ++x) {
                 int neighborsAlive = getLiveNeighbors(x, y);
                 if (neighborsAlive < 2 || neighborsAlive > 3) {
-                    this.grid[y][x] = IGameOfLife.DEAD;
+                    newGrid[y][x] = IGameOfLife.DEAD;
                 } else if (neighborsAlive == 3) {
-                    this.grid[y][x] = IGameOfLife.ALIVE;
+                    newGrid[y][x] = IGameOfLife.ALIVE;
+                } else {
+                    newGrid[y][x] = this.grid[y][x];
                 }
             }
         }
+        this.grid = newGrid;
     }
 
     @Override
