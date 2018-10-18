@@ -25,16 +25,17 @@ public class GameOfWildlife implements IGameOfLife {
         for (int y = 0; y < grid.length; ++y) {
             for (int x = 0; x < grid.length; ++x) {
                 if (rand.nextBoolean()) {
-                    grid[y][x] = new Cell(new Color(rand.nextInt(256), rand.nextInt(256), rand.nextInt(256)), true);
+                    grid[y][x] = Cell.createWithRandomColor();
                 } else {
-                    grid[y][x] = new Cell(Color.BLACK, false);
+                    grid[y][x] = new Cell();
                 }
             }
         }
     }
 
     @Override
-    public void showGrid() { }
+    public void showGrid() {
+    }
 
     @Override
     public void setAlive(int x, int y) {
@@ -64,9 +65,9 @@ public class GameOfWildlife implements IGameOfLife {
         return neighborsTotal;
     }
 
-    public int getLiveNeighborsAndMixColor(int x, int y, Color c) {
+    public int getLiveNeighborsAndMixColor(int x, int y, Cell c) {
         int neighbors = 0;
-        int r = 0, g = 0, b = 0;
+        int r = c.getColor().getRed(), g = c.getColor().getGreen(), b = c.getColor().getBlue();
         for (int yCheck = -1; yCheck < 2; ++yCheck) {
             for (int xCheck = -1; xCheck < 2; ++xCheck) {
                 if (yCheck == 0 && xCheck == 0) {
@@ -82,30 +83,52 @@ public class GameOfWildlife implements IGameOfLife {
                 }
             }
         }
-        c = new Color(Math.round((float) r / neighbors), Math.round((float) g / neighbors), Math.round((float) b / neighbors));
+
+        c.setColor(new Color(Math.round((float) r / (neighbors + 1)), Math.round((float) g / (neighbors + 1)), Math.round((float) b / (neighbors + 1))));
         return neighbors;
     }
 
     @Override
     public void runGeneration() {
         Cell[][] newGrid = new Cell[IGameOfLife.SIZE][IGameOfLife.SIZE];
+
+        int aliveCells = 0;
+        int r = 0, g = 0, b = 0;
+
         for (int y = 0; y < IGameOfLife.SIZE; ++y) {
             for (int x = 0; x < IGameOfLife.SIZE; ++x) {
-                Color mixedColor = new Color(grid[y][x].getColor().getRed(), grid[y][x].getColor().getGreen(), grid[y][x].getColor().getBlue());
-                int neighborsAlive = getLiveNeighborsAndMixColor(x, y, mixedColor);
+                if (grid[y][x].getAlive()) {
+                    ++aliveCells;
+                    r += this.grid[y][x].getColor().getRed();
+                    g += this.grid[y][x].getColor().getGreen();
+                    b += this.grid[y][x].getColor().getBlue();
+                }
+            }
+        }
+        Color backGroundColor = new Color(255 - Math.round((float) r / aliveCells), 255 - Math.round((float) g / aliveCells), 255 - Math.round((float) b / aliveCells));
 
-                newGrid[y][x] = new Cell(Color.BLACK, false);
+
+        for (int y = 0; y < IGameOfLife.SIZE; ++y) {
+            for (int x = 0; x < IGameOfLife.SIZE; ++x) {
+                Cell mixedCell = new Cell(grid[y][x]);
+                int neighborsAlive = getLiveNeighborsAndMixColor(x, y, mixedCell);
+
+                newGrid[y][x] = new Cell();
                 if (neighborsAlive < 2 || neighborsAlive > 3) {
-                    newGrid[y][x].setColor(Color.BLACK);
+                    newGrid[y][x].setColor(backGroundColor);
                     newGrid[y][x].setAlive(false);
                 } else if (neighborsAlive == 3) {
-                    newGrid[y][x].setColor(mixedColor);
                     newGrid[y][x].setAlive(true);
+                    if (grid[y][x].getAlive()) {
+                        newGrid[y][x] = mixedCell;
+                    } else {
+                        newGrid[y][x] = Cell.createWithRandomColor();
+                    }
                 } else {
                     if (grid[y][x].getAlive()) {
-                        newGrid[y][x].setColor(mixedColor);
+                        newGrid[y][x] = mixedCell;
                     } else {
-                        newGrid[y][x].setColor(Color.BLACK);
+                        newGrid[y][x].setColor(backGroundColor);
                     }
                 }
             }
