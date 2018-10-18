@@ -7,7 +7,7 @@ public class GameOfWildlife implements IGameOfLife {
     public static void main(String[] args) {
         GameOfWildlife gOL = new GameOfWildlife();
         gOL.init();
-        VisualGameOfLife visualGameOfLife = new VisualGameOfLife(gOL.getGrid());
+        VisualGameOfLife visualGameOfLife = new VisualGameOfLife(gOL.grid);
         while (true) {
             gOL.runGeneration();
             try {
@@ -15,7 +15,7 @@ public class GameOfWildlife implements IGameOfLife {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            visualGameOfLife.refresh(gOL.getGrid());
+            visualGameOfLife.refresh(gOL.grid);
         }
     }
 
@@ -94,12 +94,13 @@ public class GameOfWildlife implements IGameOfLife {
                 Color mixedColor = new Color(grid[y][x].getColor().getRed(), grid[y][x].getColor().getGreen(), grid[y][x].getColor().getBlue());
                 int neighborsAlive = getLiveNeighborsAndMixColor(x, y, mixedColor);
 
+                newGrid[y][x] = new Cell(Color.BLACK, false);
                 if (neighborsAlive < 2 || neighborsAlive > 3) {
                     newGrid[y][x].setColor(Color.BLACK);
                     newGrid[y][x].setAlive(false);
                 } else if (neighborsAlive == 3) {
                     newGrid[y][x].setColor(mixedColor);
-                    newGrid[y][x].setAlive(false);
+                    newGrid[y][x].setAlive(true);
                 } else {
                     if (grid[y][x].getAlive()) {
                         newGrid[y][x].setColor(mixedColor);
@@ -107,8 +108,6 @@ public class GameOfWildlife implements IGameOfLife {
                         newGrid[y][x].setColor(Color.BLACK);
                     }
                 }
-
-
             }
         }
         this.grid = newGrid;
