@@ -6,18 +6,18 @@ import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.event.*;
 
-@SuppressWarnings("serial")
+
 class CanvasInt extends Canvas {
     private int grid[][];
 
-    public CanvasInt(int[][] grid) {
+    CanvasInt(int[][] grid) {
         this.grid = grid;
     }
 
     /**
      * @param grid the grid to set
      */
-    public void setGrid(int[][] grid) {
+    void setGrid(int[][] grid) {
         this.grid = grid;
     }
 
@@ -52,12 +52,11 @@ class CanvasInt extends Canvas {
     }
 }
 
-@SuppressWarnings("serial")
 class CanvasCell extends Canvas {
     private Cell grid[][];
     private CellListener cellListener = new CellListener();
 
-    public CanvasCell(Cell[][] grid) {
+    CanvasCell(Cell[][] grid) {
         this.grid = grid;
         this.cellListener.setGrid(this.grid);
         addMouseListener(this.cellListener);
@@ -67,7 +66,7 @@ class CanvasCell extends Canvas {
     /**
      * @param grid the grid to set
      */
-    public void setGrid(Cell[][] grid) {
+    void setGrid(Cell[][] grid) {
         this.grid = grid;
         this.cellListener.setGrid(this.grid);
     }
@@ -147,14 +146,11 @@ class CellListener implements MouseListener, MouseMotionListener {
     }
 }
 
-// --- end of GoLCanvas ----------
-
-@SuppressWarnings("serial")
-public class VisualGameOfLife extends Frame {
+class VisualGameOfLife extends Frame {
     private CanvasInt canvasInt;
     private CanvasCell canvasCell;
 
-    public VisualGameOfLife(int[][] grid) {
+    VisualGameOfLife(int[][] grid) {
         super("Game of Life");
         // Groesse des Feldes anpassen aber mit min 300x300
         int xMax = grid.length;
@@ -174,7 +170,7 @@ public class VisualGameOfLife extends Frame {
         setVisible(true);
     }
 
-    public VisualGameOfLife(Cell[][] grid) {
+    VisualGameOfLife(Cell[][] grid) {
         super("Game of Life");
         // Groesse des Feldes anpassen aber mit min 300x300
         int xMax = grid.length;
@@ -197,7 +193,7 @@ public class VisualGameOfLife extends Frame {
     /**
      * Methode zum Neuzeichen des Gitters
      */
-    public void refresh(int[][] grid) {
+    void refresh(int[][] grid) {
         canvasInt.setGrid(grid);
         canvasInt.repaint();
     }
@@ -205,7 +201,7 @@ public class VisualGameOfLife extends Frame {
     /**
      * Methode zum Neuzeichen des Gitters
      */
-    public void refresh(Cell[][] grid) {
+    void refresh(Cell[][] grid) {
         canvasCell.setGrid(grid);
         canvasCell.repaint();
     }
