@@ -3,6 +3,7 @@ import java.util.Random;
 
 public class GameOfWildlife implements IGameOfLife {
     Cell[][] grid = new Cell[IGameOfLife.SIZE][IGameOfLife.SIZE];
+    Random rand = new Random();
 
     public static void main(String[] args) {
         GameOfWildlife gOL = new GameOfWildlife();
@@ -21,14 +22,9 @@ public class GameOfWildlife implements IGameOfLife {
 
     @Override
     public void init() {
-        Random rand = new Random();
         for (int y = 0; y < grid.length; ++y) {
             for (int x = 0; x < grid.length; ++x) {
-                if (rand.nextBoolean()) {
-                    grid[y][x] = Cell.createWithRandomColor();
-                } else {
-                    grid[y][x] = new Cell();
-                }
+                grid[y][x] = rand.nextBoolean() ? Cell.createWithRandomColor() : new Cell();
             }
         }
     }
@@ -92,22 +88,6 @@ public class GameOfWildlife implements IGameOfLife {
     public void runGeneration() {
         Cell[][] newGrid = new Cell[IGameOfLife.SIZE][IGameOfLife.SIZE];
 
-        int aliveCells = 0;
-        int r = 0, g = 0, b = 0;
-
-        for (int y = 0; y < IGameOfLife.SIZE; ++y) {
-            for (int x = 0; x < IGameOfLife.SIZE; ++x) {
-                if (grid[y][x].getAlive()) {
-                    ++aliveCells;
-                    r += this.grid[y][x].getColor().getRed();
-                    g += this.grid[y][x].getColor().getGreen();
-                    b += this.grid[y][x].getColor().getBlue();
-                }
-            }
-        }
-        Color backGroundColor = new Color(255 - Math.round((float) r / aliveCells), 255 - Math.round((float) g / aliveCells), 255 - Math.round((float) b / aliveCells));
-
-
         for (int y = 0; y < IGameOfLife.SIZE; ++y) {
             for (int x = 0; x < IGameOfLife.SIZE; ++x) {
                 Cell mixedCell = new Cell(grid[y][x]);
@@ -115,7 +95,7 @@ public class GameOfWildlife implements IGameOfLife {
 
                 newGrid[y][x] = new Cell();
                 if (neighborsAlive < 2 || neighborsAlive > 3) {
-                    newGrid[y][x].setColor(backGroundColor);
+                    newGrid[y][x].setColor(Color.BLACK);
                     newGrid[y][x].setAlive(false);
                 } else if (neighborsAlive == 3) {
                     newGrid[y][x].setAlive(true);
@@ -128,11 +108,28 @@ public class GameOfWildlife implements IGameOfLife {
                     if (grid[y][x].getAlive()) {
                         newGrid[y][x] = mixedCell;
                     } else {
-                        newGrid[y][x].setColor(backGroundColor);
+                        newGrid[y][x].setColor(Color.BLACK);
+                    }
+                }
+                newGrid[y][x].setAge(grid[y][x].getAge() + 1);
+            }
+        }
+
+        // special effect: old cells die and young ones spawn around them -->  AWESOME!!!
+        for (int y = 0; y < IGameOfLife.SIZE; ++y) {
+            for (int x = 0; x < IGameOfLife.SIZE; ++x) {
+                if (newGrid[y][x].getAge() > 50 && newGrid[y][x].getAlive()) {
+                    for (int yOffset = y - 1; yOffset < y + 2; ++yOffset) {
+                        if (yOffset < 0 || yOffset >= IGameOfLife.SIZE) {continue;} // out of bound
+                        for (int xOffset = x - 1; xOffset < x + 2; ++xOffset) {
+                            if (xOffset < 0 || xOffset >= IGameOfLife.SIZE) {continue;} // out of bound
+                            newGrid[yOffset][xOffset] = rand.nextBoolean() ? Cell.createWithRandomColor() : new Cell();
+                        }
                     }
                 }
             }
         }
+
         this.grid = newGrid;
     }
 
