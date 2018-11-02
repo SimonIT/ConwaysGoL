@@ -54,11 +54,14 @@ class CanvasInt extends Canvas {
 
 class CanvasCell extends Canvas {
     private Cell grid[][];
-    private CellListener cellListener = new CellListener();
+    private GameOfWildlife.CellListener cellListener;
 
     CanvasCell(Cell[][] grid) {
         this.grid = grid;
-        this.cellListener.setGrid(this.grid);
+    }
+
+    void addCellListener(GameOfWildlife.CellListener cellListener) {
+        this.cellListener = cellListener;
         addMouseListener(this.cellListener);
         addMouseMotionListener(this.cellListener);
     }
@@ -68,7 +71,6 @@ class CanvasCell extends Canvas {
      */
     void setGrid(Cell[][] grid) {
         this.grid = grid;
-        this.cellListener.setGrid(this.grid);
     }
 
     /**
@@ -77,7 +79,9 @@ class CanvasCell extends Canvas {
     public void update(Graphics g) {
         // Berechne die Breite und Höhe der Felder
         Rectangle frameBounds = getBounds();
-        this.cellListener.setBounds(frameBounds);
+        if (this.cellListener != null) {
+            this.cellListener.setBounds(frameBounds);
+        }
         double xSize = (double) (frameBounds.width - 1) / grid.length;
         double ySize = (double) (frameBounds.height - 1) / grid[0].length;
         for (int xPos = 0; xPos < grid.length; xPos++) {
@@ -94,55 +98,6 @@ class CanvasCell extends Canvas {
      */
     public void paint(Graphics g) {
         update(g);
-    }
-}
-
-class CellListener implements MouseListener, MouseMotionListener {
-
-    private Cell grid[][];
-    private Rectangle bounds;
-
-    void setGrid(Cell[][] grid) {
-        this.grid = grid;
-    }
-
-    void setBounds(Rectangle bounds) {
-        this.bounds = bounds;
-    }
-
-    @Override
-    public void mouseDragged(MouseEvent e) {
-        // TODO change state of dragged cell
-    }
-
-    @Override
-    public void mouseMoved(MouseEvent e) {
-
-    }
-
-    @Override
-    public void mouseClicked(MouseEvent e) {
-        // TODO change state of clicked cell
-    }
-
-    @Override
-    public void mousePressed(MouseEvent e) {
-
-    }
-
-    @Override
-    public void mouseReleased(MouseEvent e) {
-
-    }
-
-    @Override
-    public void mouseEntered(MouseEvent e) {
-
-    }
-
-    @Override
-    public void mouseExited(MouseEvent e) {
-
     }
 }
 
@@ -204,5 +159,9 @@ class VisualGameOfLife extends Frame {
     void refresh(Cell[][] grid) {
         canvasCell.setGrid(grid);
         canvasCell.repaint();
+    }
+
+    void addCellListener(GameOfWildlife.CellListener cellListener) {
+        canvasCell.addCellListener(cellListener);
     }
 }

@@ -1,14 +1,19 @@
 import java.awt.*;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.util.Random;
 
 public class GameOfWildlife implements IGameOfLife {
+    private CellListener cellListener = new CellListener();
     Cell[][] grid = new Cell[IGameOfLife.SIZE][IGameOfLife.SIZE];
-    Random rand = new Random();
+    private Random rand = new Random();
 
     public static void main(String[] args) {
         GameOfWildlife gOL = new GameOfWildlife();
         gOL.init();
         VisualGameOfLife visualGameOfLife = new VisualGameOfLife(gOL.grid);
+        visualGameOfLife.addCellListener(gOL.getCellListener());
         while (true) {
             gOL.runGeneration();
             try {
@@ -29,6 +34,7 @@ public class GameOfWildlife implements IGameOfLife {
         }
     }
 
+    @Deprecated
     @Override
     public void showGrid() {
     }
@@ -109,6 +115,7 @@ public class GameOfWildlife implements IGameOfLife {
                         newGrid[y][x] = mixedCell;
                     } else {
                         newGrid[y][x].setColor(Color.BLACK);
+                        newGrid[y][x].setAlive(false);
                     }
                 }
                 newGrid[y][x].setAge(grid[y][x].getAge() + 1);
@@ -120,9 +127,13 @@ public class GameOfWildlife implements IGameOfLife {
             for (int x = 0; x < IGameOfLife.SIZE; ++x) {
                 if (newGrid[y][x].getAge() > 50 && newGrid[y][x].getAlive()) {
                     for (int yOffset = y - 1; yOffset < y + 2; ++yOffset) {
-                        if (yOffset < 0 || yOffset >= IGameOfLife.SIZE) {continue;} // out of bound
+                        if (yOffset < 0 || yOffset >= IGameOfLife.SIZE) {
+                            continue;
+                        } // out of bound
                         for (int xOffset = x - 1; xOffset < x + 2; ++xOffset) {
-                            if (xOffset < 0 || xOffset >= IGameOfLife.SIZE) {continue;} // out of bound
+                            if (xOffset < 0 || xOffset >= IGameOfLife.SIZE) {
+                                continue;
+                            } // out of bound
                             newGrid[yOffset][xOffset] = rand.nextBoolean() ? Cell.createWithRandomColor() : new Cell();
                         }
                     }
@@ -140,8 +151,77 @@ public class GameOfWildlife implements IGameOfLife {
         }
     }
 
+    @Deprecated
     @Override
     public int[][] getGrid() {
         return null;
+    }
+
+    CellListener getCellListener() {
+        return this.cellListener;
+    }
+
+    class CellListener implements MouseListener, MouseMotionListener {
+        private Rectangle bounds;
+
+        int lastX = -1, lastY = -1;
+
+        void setBounds(Rectangle bounds) {
+            this.bounds = bounds;
+        }
+
+        @Override
+        public void mouseDragged(MouseEvent e) {
+            changeGridOnMousePosition(e);
+        }
+
+        @Override
+        public void mouseMoved(MouseEvent e) {
+
+        }
+
+        @Override
+        public void mouseClicked(MouseEvent e) {
+            changeGridOnMousePosition(e);
+        }
+
+        @Override
+        public void mousePressed(MouseEvent e) {
+
+        }
+
+        @Override
+        public void mouseReleased(MouseEvent e) {
+
+        }
+
+        @Override
+        public void mouseEntered(MouseEvent e) {
+
+        }
+
+        @Override
+        public void mouseExited(MouseEvent e) {
+
+        }
+
+        void changeGridOnMousePosition(MouseEvent e) {
+            // TODO Fix
+            int x = Math.round(e.getX() / ((float) (this.bounds.width - 1) / grid.length));
+            int y = Math.round(e.getY() / ((float) (this.bounds.height - 1) / grid[0].length));
+            if (grid[0].length > x && x > -1 && grid.length > y && y > -1 && (x != this.lastX || y != this.lastY)) {
+                if (grid[y][x].getAlive()) {
+                    System.out.println("DIE " + x + " " + y);
+                    grid[y][x].setAlive(false);
+                    grid[y][x].setColor(Color.BLACK);
+                } else {
+                    System.out.println("Go alive " + x + " " + y);
+                    grid[y][x].setAlive(true);
+                    grid[y][x].setColor(Color.WHITE);
+                }
+                this.lastX = x;
+                this.lastY = y;
+            }
+        }
     }
 }
