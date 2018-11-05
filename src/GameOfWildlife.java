@@ -217,8 +217,7 @@ public class GameOfWildlife implements IGameOfLife {
             int x = (int) ((float) e.getX() / (this.bounds.width - 1) * grid.length);
             int y = (int) (grid[0].length - (float) e.getY() / (this.bounds.height - 1) * grid[0].length);
             if (grid[0].length > x && x > -1 && grid.length > y && y > -1) {
-                grid[y][x].setAlive(true);
-                grid[y][x].setColor(Color.WHITE);
+                grid[x][y] = Cell.createWithRandomColor();
                 visualGameOfLife.refresh(grid);
             }
         }
