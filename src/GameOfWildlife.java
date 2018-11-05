@@ -5,7 +5,7 @@ import java.awt.event.MouseMotionListener;
 import java.util.Random;
 
 public class GameOfWildlife implements IGameOfLife {
-    private CellListener cellListener = new CellListener();
+    private CellListener cellListener;
     Cell[][] grid = new Cell[IGameOfLife.SIZE][IGameOfLife.SIZE];
     private Random rand = new Random();
 
@@ -13,6 +13,7 @@ public class GameOfWildlife implements IGameOfLife {
         GameOfWildlife gOL = new GameOfWildlife();
         gOL.init();
         VisualGameOfLife visualGameOfLife = new VisualGameOfLife(gOL.grid);
+        gOL.getCellListener().setVisualGameOfLife(visualGameOfLife);
         visualGameOfLife.addCellListener(gOL.getCellListener());
         while (true) {
             gOL.runGeneration();
@@ -23,6 +24,10 @@ public class GameOfWildlife implements IGameOfLife {
             }
             visualGameOfLife.refresh(gOL.grid);
         }
+    }
+
+    GameOfWildlife() {
+        this.cellListener = new CellListener();
     }
 
     @Override
@@ -123,7 +128,7 @@ public class GameOfWildlife implements IGameOfLife {
         }
 
         // special effect: old cells die and young ones spawn around them -->  AWESOME!!!
-        for (int y = 0; y < IGameOfLife.SIZE; ++y) {
+        /*for (int y = 0; y < IGameOfLife.SIZE; ++y) {
             for (int x = 0; x < IGameOfLife.SIZE; ++x) {
                 if (newGrid[y][x].getAge() > 50 && newGrid[y][x].getAlive()) {
                     for (int yOffset = y - 1; yOffset < y + 2; ++yOffset) {
@@ -139,7 +144,7 @@ public class GameOfWildlife implements IGameOfLife {
                     }
                 }
             }
-        }
+        }*/
 
         this.grid = newGrid;
     }
@@ -163,11 +168,14 @@ public class GameOfWildlife implements IGameOfLife {
 
     class CellListener implements MouseListener, MouseMotionListener {
         private Rectangle bounds;
-
-        int lastX = -1, lastY = -1;
+        private VisualGameOfLife visualGameOfLife;
 
         void setBounds(Rectangle bounds) {
             this.bounds = bounds;
+        }
+
+        void setVisualGameOfLife(VisualGameOfLife visualGameOfLife) {
+            this.visualGameOfLife = visualGameOfLife;
         }
 
         @Override
@@ -206,21 +214,12 @@ public class GameOfWildlife implements IGameOfLife {
         }
 
         void changeGridOnMousePosition(MouseEvent e) {
-            // TODO Fix
-            int x = Math.round(e.getX() / ((float) (this.bounds.width - 1) / grid.length));
-            int y = Math.round(e.getY() / ((float) (this.bounds.height - 1) / grid[0].length));
-            if (grid[0].length > x && x > -1 && grid.length > y && y > -1 && (x != this.lastX || y != this.lastY)) {
-                if (grid[y][x].getAlive()) {
-                    System.out.println("DIE " + x + " " + y);
-                    grid[y][x].setAlive(false);
-                    grid[y][x].setColor(Color.BLACK);
-                } else {
-                    System.out.println("Go alive " + x + " " + y);
-                    grid[y][x].setAlive(true);
-                    grid[y][x].setColor(Color.WHITE);
-                }
-                this.lastX = x;
-                this.lastY = y;
+            int x = (int) ((float) e.getX() / (this.bounds.width - 1) * grid.length);
+            int y = (int) (grid[0].length - (float) e.getY() / (this.bounds.height - 1) * grid[0].length);
+            if (grid[0].length > x && x > -1 && grid.length > y && y > -1) {
+                grid[y][x].setAlive(true);
+                grid[y][x].setColor(Color.WHITE);
+                visualGameOfLife.refresh(grid);
             }
         }
     }
