@@ -1,4 +1,5 @@
 import java.awt.Color;
+import java.util.Objects;
 import java.util.Random;
 
 // objects of class Cell are needed in GameOfWildlife
@@ -67,6 +68,11 @@ public class Cell {
         if (!obj.getClass().equals(this.getClass())) return false;
         Cell that = (Cell) obj;
         return this.age == that.getAge() && this.color.equals(that.getColor()) && this.alive == that.getAlive();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.age, this.color.hashCode(), this.alive);
     }
 
     public static Cell createWithRandomColor() {
