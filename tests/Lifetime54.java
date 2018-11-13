@@ -10,12 +10,12 @@ public class Lifetime54 {
     static final int AGE = 54;
 
     /**
-     * Sets a specific patter for which is dead after 54 cycles
+     * Sets a specific pattern which is dead after 54 cycles
      * https://de.wikipedia.org/wiki/Conways_Spiel_des_Lebens#/media/File:Game_of_life_U.svg
      *
      * @param gameOfLife the gameOfLife object
      */
-    private static void setPattern(IGameOfLife gameOfLife) {
+    private static void setStartPattern(IGameOfLife gameOfLife) {
         int halfSize = gameOfLife.SIZE / 2;
         gameOfLife.setAlive(halfSize, halfSize);
         gameOfLife.setAlive(halfSize + 1, halfSize);
@@ -45,7 +45,7 @@ public class Lifetime54 {
             }
         }
 
-        setPattern(gameOfLife);
+        setStartPattern(gameOfLife);
 
         gameOfLife.runGenerations(AGE);
 
@@ -66,7 +66,7 @@ public class Lifetime54 {
             }
         }
 
-        setPattern(gameOfLife);
+        setStartPattern(gameOfLife);
 
         gameOfLife.runGenerations(AGE);
 
