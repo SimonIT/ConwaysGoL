@@ -60,6 +60,15 @@ public class Cell {
         this.alive = alive;
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) return false;
+        if (obj == this) return true;
+        if (!obj.getClass().equals(this.getClass())) return false;
+        Cell that = (Cell) obj;
+        return this.age == that.getAge() && this.color.equals(that.getColor()) && this.alive == that.getAlive();
+    }
+
     public static Cell createWithRandomColor() {
         Random random = new Random();
         return new Cell(new Color(random.nextInt(256), random.nextInt(256), random.nextInt(256)), true);
