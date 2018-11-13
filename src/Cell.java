@@ -16,8 +16,10 @@ public class Cell {
         this.color = Color.BLACK;
         this.alive = false;
     }
+
     /**
      * creates a newly born cell with a specific color
+     *
      * @param color: Color
      * @param alive: boolean
      */
@@ -29,6 +31,7 @@ public class Cell {
 
     /**
      * the copy constructor simply copies a Cell object
+     *
      * @param cell: Cell
      */
     Cell(Cell cell) {
@@ -75,6 +78,9 @@ public class Cell {
         return Objects.hash(this.age, this.color.hashCode(), this.alive);
     }
 
+    /**
+     * @return an alive Cell object with random color
+     */
     public static Cell createWithRandomColor() {
         Random random = new Random();
         return new Cell(new Color(random.nextInt(256), random.nextInt(256), random.nextInt(256)), true);
