@@ -73,6 +73,7 @@ public class Cell {
         return this.age == that.getAge() && this.color.equals(that.getColor()) && this.alive == that.getAlive();
     }
 
+
     @Override
     public int hashCode() {
         return Objects.hash(this.age, this.color.hashCode(), this.alive);

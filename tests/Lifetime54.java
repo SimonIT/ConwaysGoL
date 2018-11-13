@@ -9,6 +9,12 @@ public class Lifetime54 {
 
     static final int AGE = 54;
 
+    /**
+     * Sets a specific patter for which is dead after 54 cycles
+     * https://de.wikipedia.org/wiki/Conways_Spiel_des_Lebens#/media/File:Game_of_life_U.svg
+     *
+     * @param gameOfLife the gameOfLife object
+     */
     private static void setPattern(IGameOfLife gameOfLife) {
         int halfSize = gameOfLife.SIZE / 2;
         gameOfLife.setAlive(halfSize, halfSize);
@@ -32,10 +38,10 @@ public class Lifetime54 {
     void noLifeAfter54CyclesInt() {
         int[][] deadGrid = new int[IGameOfLife.SIZE][IGameOfLife.SIZE];
         GameOfLife gameOfLife = new GameOfLife();
-        for (int x = 0; x < IGameOfLife.SIZE; x++) {
-            for (int y = 0; y < IGameOfLife.SIZE; y++) {
+        for (int x = 0; x < gameOfLife.SIZE; x++) {
+            for (int y = 0; y < gameOfLife.SIZE; y++) {
                 gameOfLife.setDead(x, y);
-                deadGrid[x][x] = IGameOfLife.DEAD;
+                deadGrid[x][x] = gameOfLife.DEAD;
             }
         }
 
@@ -52,8 +58,8 @@ public class Lifetime54 {
         GameOfWildlife gameOfLife = new GameOfWildlife();
 
         Cell[][] golCells = gameOfLife.getCellGrid();
-        for (int x = 0; x < IGameOfLife.SIZE; x++) {
-            for (int y = 0; y < IGameOfLife.SIZE; y++) {
+        for (int x = 0; x < gameOfLife.SIZE; x++) {
+            for (int y = 0; y < gameOfLife.SIZE; y++) {
                 golCells[x][y] = new Cell();
                 deadGrid[x][y] = new Cell();
                 deadGrid[x][y].setAge(AGE);
