@@ -1,7 +1,8 @@
 import java.util.Random;
 
 public class GameOfLife implements IGameOfLife {
-    int[][] grid = new int[IGameOfLife.SIZE][IGameOfLife.SIZE];
+    private int[][] grid = new int[IGameOfLife.SIZE][IGameOfLife.SIZE];
+    private Random rand = new Random();
 
     public static void main(String[] args) {
         GameOfLife gOL = new GameOfLife();
@@ -20,10 +21,9 @@ public class GameOfLife implements IGameOfLife {
 
     @Override
     public void init() {
-        Random rand = new Random();
-        for (int y = 0; y < grid.length; ++y) {
-            for (int x = 0; x < grid.length; ++x) {
-                grid[y][x] = rand.nextBoolean() ? IGameOfLife.ALIVE : IGameOfLife.DEAD;
+        for (int x = 0; x < grid.length; ++x) {
+            for (int y = 0; y < grid.length; ++y) {
+                grid[x][y] = rand.nextBoolean() ? IGameOfLife.ALIVE : IGameOfLife.DEAD;
             }
         }
     }
@@ -43,12 +43,12 @@ public class GameOfLife implements IGameOfLife {
 
     @Override
     public void setAlive(int x, int y) {
-        this.grid[y][x] = IGameOfLife.ALIVE;
+        this.grid[x][y] = IGameOfLife.ALIVE;
     }
 
     @Override
     public void setDead(int x, int y) {
-        this.grid[y][x] = IGameOfLife.DEAD;
+        this.grid[x][y] = IGameOfLife.DEAD;
     }
 
     @Override
@@ -61,7 +61,7 @@ public class GameOfLife implements IGameOfLife {
                 }
                 int xNeighbor = (x + xCheck + IGameOfLife.SIZE) % IGameOfLife.SIZE;
                 int yNeighbor = (y + yCheck + IGameOfLife.SIZE) % IGameOfLife.SIZE;
-                if (this.grid[yNeighbor][xNeighbor] == IGameOfLife.ALIVE) {
+                if (this.grid[xNeighbor][yNeighbor] == IGameOfLife.ALIVE) {
                     ++neighborsTotal;
                 }
             }
@@ -72,15 +72,15 @@ public class GameOfLife implements IGameOfLife {
     @Override
     public void runGeneration() {
         int[][] newGrid = new int[IGameOfLife.SIZE][IGameOfLife.SIZE];
-        for (int y = 0; y < IGameOfLife.SIZE; ++y) {
-            for (int x = 0; x < IGameOfLife.SIZE; ++x) {
+        for (int x = 0; x < IGameOfLife.SIZE; ++x) {
+            for (int y = 0; y < IGameOfLife.SIZE; ++y) {
                 int neighborsAlive = getLiveNeighbors(x, y);
                 if (neighborsAlive < 2 || neighborsAlive > 3) {
-                    newGrid[y][x] = IGameOfLife.DEAD;
+                    newGrid[x][y] = IGameOfLife.DEAD;
                 } else if (neighborsAlive == 3) {
-                    newGrid[y][x] = IGameOfLife.ALIVE;
+                    newGrid[x][y] = IGameOfLife.ALIVE;
                 } else {
-                    newGrid[y][x] = this.grid[y][x];
+                    newGrid[x][y] = this.grid[x][y];
                 }
             }
         }

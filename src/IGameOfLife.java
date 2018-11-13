@@ -2,7 +2,7 @@ public interface IGameOfLife {
 
     public static final int ALIVE = 1;
     public static final int DEAD = 0;
-    public static final int SIZE = 60;
+    public static final int SIZE = 40;
 
     /**
      * init values

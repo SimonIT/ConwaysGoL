@@ -126,7 +126,7 @@ class VisualGameOfLife extends Frame {
     }
 
     VisualGameOfLife(Cell[][] grid) {
-        super("Game of Life");
+        super("Game of Wildlife");
         // Groesse des Feldes anpassen aber mit min 300x300
         int xMax = grid.length;
         int yMax = grid[0].length;
