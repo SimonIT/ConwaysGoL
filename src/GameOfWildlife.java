@@ -143,6 +143,10 @@ public class GameOfWildlife implements IGameOfLife {
         return null;
     }
 
+    public Cell[][] getCellGrid() {
+        return this.grid;
+    }
+
     CellListener getCellListener() {
         return this.cellListener;
     }
