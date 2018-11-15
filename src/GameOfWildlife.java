@@ -106,7 +106,6 @@ public class GameOfWildlife implements IGameOfLife {
 
                 newGrid[x][y] = new Cell();
                 if (neighborsAlive < 2 || neighborsAlive > 3) {
-                    newGrid[x][y].setColor(Color.BLACK);
                     newGrid[x][y].setAlive(false);
                 } else if (neighborsAlive == 3) {
                     newGrid[x][y].setAlive(true);
@@ -119,7 +118,6 @@ public class GameOfWildlife implements IGameOfLife {
                     if (grid[x][y].getAlive()) {
                         newGrid[x][y] = mixedCell;
                     } else {
-                        newGrid[x][y].setColor(Color.BLACK);
                         newGrid[x][y].setAlive(false);
                     }
                 }

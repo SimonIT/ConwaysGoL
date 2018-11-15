@@ -62,6 +62,9 @@ public class Cell {
 
     public void setAlive(boolean alive) {
         this.alive = alive;
+        if (!this.alive) {
+            this.setColor(Color.BLACK);
+        }
     }
 
     @Override
