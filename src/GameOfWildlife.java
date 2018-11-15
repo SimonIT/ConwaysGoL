@@ -4,24 +4,97 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.util.Random;
 
+/**
+ * advanced version of "Conway's Game of Life"; cells with dynamic color are used
+ */
 public class GameOfWildlife implements IGameOfLife {
+    // subclass CellListener is used for being able to create new alive cells by clicking on GUI
+    // TODO: Simon's comment
+    class CellListener implements MouseListener, MouseMotionListener {
+        private Rectangle bounds;
+        private VisualGameOfLife visualGameOfLife;
+
+        void setBounds(Rectangle bounds) {
+            this.bounds = bounds;
+        }
+
+        void setVisualGameOfLife(VisualGameOfLife visualGameOfLife) {
+            this.visualGameOfLife = visualGameOfLife;
+        }
+
+        @Override
+        public void mouseDragged(MouseEvent e) {
+            changeGridOnMousePosition(e);
+        }
+
+        @Override
+        public void mouseMoved(MouseEvent e) {
+        }
+
+        @Override
+        public void mouseClicked(MouseEvent e) {
+            changeGridOnMousePosition(e);
+        }
+
+        @Override
+        public void mousePressed(MouseEvent e) {
+        }
+
+        @Override
+        public void mouseReleased(MouseEvent e) {
+        }
+
+        @Override
+        public void mouseEntered(MouseEvent e) {
+        }
+
+        @Override
+        public void mouseExited(MouseEvent e) {
+        }
+
+        void changeGridOnMousePosition(MouseEvent e) {
+            int x = (int) ((float) e.getX() / (this.bounds.width - 1) * grid.length);
+            int y = (int) (grid[0].length - (float) e.getY() / (this.bounds.height - 1) * grid[0].length);
+            if (grid[0].length > x && x > -1 && grid.length > y && y > -1) {
+                grid[x][y] = Cell.createWithRandomColor();
+                visualGameOfLife.refresh(grid);
+            }
+        }
+    }
+
+    // new object of class CellListener is created for being able to generate new alive cells on grid
     private CellListener cellListener;
+    // this 2D grid holds all cells in the form of Cell objects;
     private Cell[][] grid = new Cell[IGameOfLife.SIZE][IGameOfLife.SIZE];
+    // random integers are needed for initialization of the grid
     private Random rand = new Random();
 
+    /**
+     * start of program
+     * @param args
+     */
     public static void main(String[] args) {
+        // create a new object this class
         GameOfWildlife gOL = new GameOfWildlife();
+        // fill grid with random initial population
         gOL.init();
+        // create a new object of class "VisualGameOfLife" for gui representation of grid and provide reference of grid
         VisualGameOfLife visualGameOfLife = new VisualGameOfLife(gOL.grid);
+        // TODO: Simon's comment
         gOL.getCellListener().setVisualGameOfLife(visualGameOfLife);
+        // TODO: Simon's comment
         visualGameOfLife.addCellListener(gOL.getCellListener());
+        // start infinite loop for simulating the game
         while (true) {
-            gOL.runGeneration();
+            // wait for 500ms (0.5s) so simulation doesn't happen too fast; a try-catch block is needed for this
             try {
                 Thread.sleep(500);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+            // retrieve new generation from current one
+            gOL.runGeneration();
+            // show current generation in GUI with the help of "VisualGameOfLife"
             visualGameOfLife.refresh(gOL.grid);
         }
     }
@@ -147,62 +220,5 @@ public class GameOfWildlife implements IGameOfLife {
 
     CellListener getCellListener() {
         return this.cellListener;
-    }
-
-    class CellListener implements MouseListener, MouseMotionListener {
-        private Rectangle bounds;
-        private VisualGameOfLife visualGameOfLife;
-
-        void setBounds(Rectangle bounds) {
-            this.bounds = bounds;
-        }
-
-        void setVisualGameOfLife(VisualGameOfLife visualGameOfLife) {
-            this.visualGameOfLife = visualGameOfLife;
-        }
-
-        @Override
-        public void mouseDragged(MouseEvent e) {
-            changeGridOnMousePosition(e);
-        }
-
-        @Override
-        public void mouseMoved(MouseEvent e) {
-
-        }
-
-        @Override
-        public void mouseClicked(MouseEvent e) {
-            changeGridOnMousePosition(e);
-        }
-
-        @Override
-        public void mousePressed(MouseEvent e) {
-
-        }
-
-        @Override
-        public void mouseReleased(MouseEvent e) {
-
-        }
-
-        @Override
-        public void mouseEntered(MouseEvent e) {
-
-        }
-
-        @Override
-        public void mouseExited(MouseEvent e) {
-
-        }
-
-        void changeGridOnMousePosition(MouseEvent e) {
-            int x = (int) ((float) e.getX() / (this.bounds.width - 1) * grid.length);
-            int y = (int) (grid[0].length - (float) e.getY() / (this.bounds.height - 1) * grid[0].length);
-            if (grid[0].length > x && x > -1 && grid.length > y && y > -1) {
-                grid[x][y] = Cell.createWithRandomColor();
-                visualGameOfLife.refresh(grid);
-            }
-        }
     }
 }

@@ -7,22 +7,21 @@ public class GameOfLife implements IGameOfLife {
     // width and height of grid are defined as X_SIZE and Y_SIZE
     private int X_SIZE = IGameOfLife.SIZE;
     private int Y_SIZE = IGameOfLife.SIZE;
-    // this 2D grid will hold all cells in the form of integers
+    // this 2D grid holds all cells in the form of integers
     private int[][] grid = new int[IGameOfLife.SIZE][IGameOfLife.SIZE];
     // random integers are needed for initialization of the grid
     private Random rand = new Random();
 
     /**
      * start of program
-     *
      * @param args
      */
     public static void main(String[] args) {
         // create a new object this class
         GameOfLife gOL = new GameOfLife();
-        // fill grid with random intial population
+        // fill grid with random initial population
         gOL.init();
-        // create a new object of class "VisualGameOfLife" for gui representation of grid
+        // create a new object of class "VisualGameOfLife" for gui representation of grid and provide reference of grid
         VisualGameOfLife visualGameOfLife = new VisualGameOfLife(gOL.getGrid());
         // start infinite loop for simulating the game
         while (true) {
@@ -36,7 +35,6 @@ public class GameOfLife implements IGameOfLife {
             gOL.runGeneration();
             // show current generation in GUI with the help of "VisualGameOfLife"
             visualGameOfLife.refresh(gOL.grid);
-            gOL.showGrid();
         }
     }
 
