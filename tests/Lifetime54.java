@@ -6,17 +6,25 @@ import org.junit.jupiter.api.Test;
  * "Testfall 2 - Muster mit begrenzter Lebensdauer"
  */
 public class Lifetime54 {
-
-    static final int AGE = 54;
+    // the amount of simulated steps in this test is TIME_STEP
+    static final int TIME_STEPS = 54;
 
     /**
-     * Sets a specific pattern which is dead after 54 cycles
-     * https://de.wikipedia.org/wiki/Conways_Spiel_des_Lebens#/media/File:Game_of_life_U.svg
+     * sets the following pattern which should be dead after 54 cycles:
+     *
+     *      ###
+     *      # #
+     *      # #
+     *
+     *      # #
+     *      # #
+     *      ###
      *
      * @param gameOfLife the gameOfLife object
      */
     private static void setStartPattern(IGameOfLife gameOfLife) {
         int halfSize = gameOfLife.SIZE / 2;
+
         gameOfLife.setAlive(halfSize, halfSize);
         gameOfLife.setAlive(halfSize + 1, halfSize);
         gameOfLife.setAlive(halfSize + 2, halfSize);
@@ -34,42 +42,44 @@ public class Lifetime54 {
         gameOfLife.setAlive(halfSize + 2, halfSize + 6);
     }
 
+    /**
+     * test for int array
+     */
     @Test
     void noLifeAfter54CyclesInt() {
         int[][] deadGrid = new int[IGameOfLife.SIZE][IGameOfLife.SIZE];
         GameOfLife gameOfLife = new GameOfLife();
-        for (int x = 0; x < gameOfLife.SIZE; x++) {
-            for (int y = 0; y < gameOfLife.SIZE; y++) {
+        for (int x = 0; x < gameOfLife.SIZE; ++x) {
+            for (int y = 0; y < gameOfLife.SIZE; ++y) {
                 gameOfLife.setDead(x, y);
                 deadGrid[x][x] = gameOfLife.DEAD;
             }
         }
 
         setStartPattern(gameOfLife);
-
-        gameOfLife.runGenerations(AGE);
-
+        gameOfLife.runGenerations(TIME_STEPS);
         assertArrayEquals(deadGrid, gameOfLife.getGrid());
     }
 
+    /**
+     * test for Cell array
+     */
     @Test
     void noLifeAfter54CyclesCell() {
         Cell[][] deadGrid = new Cell[IGameOfLife.SIZE][IGameOfLife.SIZE];
         GameOfWildlife gameOfLife = new GameOfWildlife();
 
         Cell[][] golCells = gameOfLife.getCellGrid();
-        for (int x = 0; x < gameOfLife.SIZE; x++) {
-            for (int y = 0; y < gameOfLife.SIZE; y++) {
+        for (int x = 0; x < gameOfLife.SIZE; ++x) {
+            for (int y = 0; y < gameOfLife.SIZE; ++y) {
                 golCells[x][y] = new Cell();
                 deadGrid[x][y] = new Cell();
-                deadGrid[x][y].setAge(AGE);
+                deadGrid[x][y].setAge(TIME_STEPS);
             }
         }
 
         setStartPattern(gameOfLife);
-
-        gameOfLife.runGenerations(AGE);
-
+        gameOfLife.runGenerations(TIME_STEPS);
         assertArrayEquals(deadGrid, gameOfLife.getCellGrid());
     }
 }
