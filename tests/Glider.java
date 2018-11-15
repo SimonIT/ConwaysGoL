@@ -26,6 +26,11 @@ public class Glider {
         gameOfLife.setAlive(halfSize + 2, halfSize + 2);
     }
 
+    /**
+     * Sets the glider after 4 generations
+     *
+     * @param gameOfLife the gameOfLife object
+     */
     private static void setEndPattern(IGameOfLife gameOfLife) {
         int halfSize = gameOfLife.SIZE / 2;
         gameOfLife.setAlive(halfSize + 2, halfSize + 1);
@@ -35,6 +40,9 @@ public class Glider {
         gameOfLife.setAlive(halfSize + 3, halfSize + 3);
     }
 
+    /**
+     * test for int array
+     */
     @Test
     void gliderInt() {
         GameOfLife gameOfEndLife = new GameOfLife();
@@ -46,6 +54,9 @@ public class Glider {
         assertArrayEquals(gameOfLife.getGrid(), gameOfEndLife.getGrid());
     }
 
+    /**
+     * test for Cell array
+     */
     @Test
     void gliderCell() {
         GameOfWildlife gameOfEndLife = new GameOfWildlife();

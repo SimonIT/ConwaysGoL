@@ -21,23 +21,20 @@ public interface IGameOfLife {
     /**
      * set cell alive
      *
-     * @param x
-     *            x-position
-     * @param y
-     *            y-position
+     * @param x x-position
+     * @param y y-position
      */
     public abstract void setAlive(int x, int y);
 
     /**
      * set cell dead
      *
-     * @param x  x-position
-     * @param y  y-position
+     * @param x x-position
+     * @param y y-position
      */
     public abstract void setDead(int x, int y);
 
     /**
-     *
      * how many neighbours do I have
      *
      * @param x x-position
@@ -47,18 +44,14 @@ public interface IGameOfLife {
     public abstract int getLiveNeighbors(int x, int y);
 
     /**
-     *
      * simulate a round
-     *
      */
     public abstract void runGeneration();
 
     /**
-     *
      * simulate many rounds
      *
-     * @param howMany_
-     *            how often should we run the lot
+     * @param howMany_ how often should we run the lot
      */
     public abstract void runGenerations(int howMany_);
 

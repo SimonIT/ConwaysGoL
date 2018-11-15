@@ -6,7 +6,9 @@ import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.event.*;
 
-
+/**
+ * canvas for drawing the cell objects
+ */
 class CanvasInt extends Canvas {
     private int grid[][];
 
@@ -24,6 +26,7 @@ class CanvasInt extends Canvas {
     /**
      * update : wird bei repaint() aufgerufen
      */
+    @Override
     public void update(Graphics g) {
         // Berechne die Breite und Höhe der Felder
         Rectangle frameBounds = getBounds();
@@ -33,7 +36,7 @@ class CanvasInt extends Canvas {
         double ySize = (double) height / grid[0].length;
         for (int xPos = 0; xPos < grid.length; xPos++) {
             for (int yPos = 0; yPos < grid[0].length; yPos++) {
-                if (grid[xPos][yPos] == 1) {
+                if (grid[xPos][yPos] == IGameOfLife.ALIVE) {
                     g.setColor(Color.YELLOW);
                 } else {
                     g.setColor(Color.BLACK);
@@ -52,6 +55,9 @@ class CanvasInt extends Canvas {
     }
 }
 
+/**
+ * canvas for drawing the cell objects
+ */
 class CanvasCell extends Canvas {
     private Cell grid[][];
     private GameOfWildlife.CellListener cellListener;
@@ -60,6 +66,11 @@ class CanvasCell extends Canvas {
         this.grid = grid;
     }
 
+    /**
+     * sets the required listeners for the mouse drawing
+     *
+     * @param cellListener
+     */
     void addCellListener(GameOfWildlife.CellListener cellListener) {
         this.cellListener = cellListener;
         addMouseListener(this.cellListener);
@@ -76,6 +87,7 @@ class CanvasCell extends Canvas {
     /**
      * update : wird bei repaint() aufgerufen
      */
+    @Override
     public void update(Graphics g) {
         // Berechne die Breite und Höhe der Felder
         Rectangle frameBounds = getBounds();
@@ -101,10 +113,18 @@ class CanvasCell extends Canvas {
     }
 }
 
+/**
+ * the window
+ */
 class VisualGameOfLife extends Frame {
     private CanvasInt canvasInt;
     private CanvasCell canvasCell;
 
+    /**
+     * creates aa windows from int array
+     *
+     * @param grid: a int grid
+     */
     VisualGameOfLife(int[][] grid) {
         super("Game of Life");
         // Groesse des Feldes anpassen aber mit min 300x300
@@ -125,6 +145,11 @@ class VisualGameOfLife extends Frame {
         setVisible(true);
     }
 
+    /**
+     * creates a window from cell objects
+     *
+     * @param grid: a cell grid
+     */
     VisualGameOfLife(Cell[][] grid) {
         super("Game of Wildlife");
         // Groesse des Feldes anpassen aber mit min 300x300
@@ -161,6 +186,11 @@ class VisualGameOfLife extends Frame {
         canvasCell.repaint();
     }
 
+    /**
+     * adds the a listener to canvas
+     *
+     * @param cellListener: a cell listener
+     */
     void addCellListener(GameOfWildlife.CellListener cellListener) {
         canvasCell.addCellListener(cellListener);
     }
