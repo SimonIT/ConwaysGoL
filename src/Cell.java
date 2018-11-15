@@ -82,6 +82,11 @@ public class Cell {
         return Objects.hash(this.age, this.color.hashCode(), this.alive);
     }
 
+    @Override
+    public String toString() {
+        return String.format("Cell [age=%s] [%s] [alive=%s]", this.age, this.color, this.alive);
+    }
+
     /**
      * @return an alive Cell object with random color
      */

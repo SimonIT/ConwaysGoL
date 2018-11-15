@@ -49,12 +49,6 @@ public class Lifetime54 {
     void noLifeAfter54CyclesInt() {
         int[][] deadGrid = new int[IGameOfLife.SIZE][IGameOfLife.SIZE];
         GameOfLife gameOfLife = new GameOfLife();
-        for (int x = 0; x < gameOfLife.SIZE; ++x) {
-            for (int y = 0; y < gameOfLife.SIZE; ++y) {
-                gameOfLife.setDead(x, y);
-                deadGrid[x][x] = gameOfLife.DEAD;
-            }
-        }
 
         setStartPattern(gameOfLife);
         gameOfLife.runGenerations(TIME_STEPS);
