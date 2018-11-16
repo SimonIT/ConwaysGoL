@@ -14,7 +14,8 @@ public class GameOfLife implements IGameOfLife {
 
     /**
      * start of program
-     * @param args
+     *
+     * @param args console args
      */
     public static void main(String[] args) {
         // create a new object this class
@@ -153,6 +154,7 @@ public class GameOfLife implements IGameOfLife {
 
     /**
      * runs multiple simulation steps
+     *
      * @param howMany: amount of steps to be simulated
      */
     @Override
@@ -164,6 +166,7 @@ public class GameOfLife implements IGameOfLife {
 
     /**
      * get private grid from
+     *
      * @return grid
      */
     @Override

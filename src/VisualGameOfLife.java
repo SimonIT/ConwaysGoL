@@ -69,7 +69,7 @@ class CanvasCell extends Canvas {
     /**
      * sets the required listeners for the mouse drawing
      *
-     * @param cellListener
+     * @param cellListener a cell listener
      */
     void addCellListener(GameOfWildlife.CellListener cellListener) {
         this.cellListener = cellListener;
@@ -91,9 +91,7 @@ class CanvasCell extends Canvas {
     public void update(Graphics g) {
         // Berechne die Breite und Höhe der Felder
         Rectangle frameBounds = getBounds();
-        if (this.cellListener != null) {
-            this.cellListener.setBounds(frameBounds);
-        }
+
         double xSize = (double) (frameBounds.width - 1) / grid.length;
         double ySize = (double) (frameBounds.height - 1) / grid[0].length;
         for (int xPos = 0; xPos < grid.length; xPos++) {
@@ -172,6 +170,8 @@ class VisualGameOfLife extends Frame {
 
     /**
      * Methode zum Neuzeichen des Gitters
+     *
+     * @param grid the new grid
      */
     void refresh(int[][] grid) {
         canvasInt.setGrid(grid);
@@ -180,6 +180,8 @@ class VisualGameOfLife extends Frame {
 
     /**
      * Methode zum Neuzeichen des Gitters
+     *
+     * @param grid the new grid
      */
     void refresh(Cell[][] grid) {
         canvasCell.setGrid(grid);

@@ -11,12 +11,7 @@ public class GameOfWildlife implements IGameOfLife {
     // subclass CellListener is used for being able to create new alive cells by clicking on GUI
     // TODO: Simon's comment
     class CellListener implements MouseListener, MouseMotionListener {
-        private Rectangle bounds;
         private VisualGameOfLife visualGameOfLife;
-
-        void setBounds(Rectangle bounds) {
-            this.bounds = bounds;
-        }
 
         void setVisualGameOfLife(VisualGameOfLife visualGameOfLife) {
             this.visualGameOfLife = visualGameOfLife;
@@ -52,12 +47,19 @@ public class GameOfWildlife implements IGameOfLife {
         public void mouseExited(MouseEvent e) {
         }
 
+        /**
+         * @param e a mouse event
+         */
         void changeGridOnMousePosition(MouseEvent e) {
-            int x = (int) ((float) e.getX() / (this.bounds.width - 1) * grid.length);
-            int y = (int) (grid[0].length - (float) e.getY() / (this.bounds.height - 1) * grid[0].length);
-            if (grid[0].length > x && x > -1 && grid.length > y && y > -1) {
-                grid[x][y] = Cell.createWithRandomColor();
-                visualGameOfLife.refresh(grid);
+            int x = (int) ((float) e.getX() / (this.visualGameOfLife.getBounds().width - 1) * grid.length); // calculate the x array position from the mouse x position
+            int y = (int) (grid[0].length - (float) e.getY() / (this.visualGameOfLife.getBounds().height - 1) * grid[0].length); // calculate the y array position from the mouse y position
+            if (grid[0].length > x && x > -1 && grid.length > y && y > -1) { // if the mouse is on the grid
+                if (e.isShiftDown()) {
+                    grid[x][y].setAlive(false); // if shift is pressed  kill the cell
+                } else {
+                    grid[x][y] = Cell.createWithRandomColor(); // create a new random colored cell
+                }
+                visualGameOfLife.refresh(grid); // refresh the screen
             }
         }
     }
@@ -71,7 +73,8 @@ public class GameOfWildlife implements IGameOfLife {
 
     /**
      * start of program
-     * @param args
+     *
+     * @param args console args
      */
     public static void main(String[] args) {
         // create a new object this class
@@ -80,9 +83,9 @@ public class GameOfWildlife implements IGameOfLife {
         gOL.init();
         // create a new object of class "VisualGameOfLife" for gui representation of grid and provide reference of grid
         VisualGameOfLife visualGameOfLife = new VisualGameOfLife(gOL.grid);
-        // TODO: Simon's comment
+        // to refresh the picture needs the cell listener the visualGameOfLife
         gOL.getCellListener().setVisualGameOfLife(visualGameOfLife);
-        // TODO: Simon's comment
+        // adds the cell listener to the windows to draw if a click appears
         visualGameOfLife.addCellListener(gOL.getCellListener());
         // start infinite loop for simulating the game
         while (true) {
@@ -100,7 +103,7 @@ public class GameOfWildlife implements IGameOfLife {
     }
 
     GameOfWildlife() {
-        this.cellListener = new CellListener();
+        this.cellListener = new CellListener(); // create a new cell listener
     }
 
     @Override
@@ -112,6 +115,9 @@ public class GameOfWildlife implements IGameOfLife {
         }
     }
 
+    /**
+     * Not implemented because we can't display mixed colors
+     */
     @Deprecated
     @Override
     public void showGrid() {
@@ -211,13 +217,19 @@ public class GameOfWildlife implements IGameOfLife {
     @Deprecated
     @Override
     public int[][] getGrid() {
-        return null;
+        return null; // return null because we have here no int array and we have to match the interface
     }
 
+    /**
+     * @return the cell grid
+     */
     public Cell[][] getCellGrid() {
         return this.grid;
     }
 
+    /**
+     * @return the cell listener
+     */
     CellListener getCellListener() {
         return this.cellListener;
     }

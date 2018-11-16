@@ -11,7 +11,7 @@ public class Lifetime54 {
 
     /**
      * sets the following pattern which should be dead after 54 cycles:
-     *
+     * <pre>
      *      ###
      *      # #
      *      # #
@@ -19,7 +19,7 @@ public class Lifetime54 {
      *      # #
      *      # #
      *      ###
-     *
+     *</pre>
      * @param gameOfLife the gameOfLife object
      */
     private static void setStartPattern(IGameOfLife gameOfLife) {
