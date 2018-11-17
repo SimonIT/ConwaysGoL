@@ -3,7 +3,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 
 /**
- * "Testfall 2 - Muster mit begrenzter Lebensdauer"
+ * Testfall 2 - Muster mit begrenzter Lebensdauer
  */
 public class Lifetime54 {
     // the amount of simulated steps in this test is TIME_STEP
@@ -52,6 +52,7 @@ public class Lifetime54 {
 
         setStartPattern(gameOfLife);
         gameOfLife.runGenerations(TIME_STEPS);
+        // compare generated grid and manual created grid
         assertArrayEquals(deadGrid, gameOfLife.getGrid());
     }
 
@@ -68,12 +69,14 @@ public class Lifetime54 {
             for (int y = 0; y < gameOfLife.SIZE; ++y) {
                 golCells[x][y] = new Cell();
                 deadGrid[x][y] = new Cell();
+                // set age to match the hahscode
                 deadGrid[x][y].setAge(TIME_STEPS);
             }
         }
 
         setStartPattern(gameOfLife);
         gameOfLife.runGenerations(TIME_STEPS);
+        // compare generated grid and manual created grid
         assertArrayEquals(deadGrid, gameOfLife.getCellGrid());
     }
 }

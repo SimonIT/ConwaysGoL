@@ -50,6 +50,7 @@ class CanvasInt extends Canvas {
     /**
      * paint wird beim ersten Mal aufgerufen => initialisierung
      */
+    @Override
     public void paint(Graphics g) {
         update(g);
     }
@@ -60,7 +61,6 @@ class CanvasInt extends Canvas {
  */
 class CanvasCell extends Canvas {
     private Cell grid[][];
-    private GameOfWildlife.CellListener cellListener;
 
     CanvasCell(Cell[][] grid) {
         this.grid = grid;
@@ -72,9 +72,8 @@ class CanvasCell extends Canvas {
      * @param cellListener a cell listener
      */
     void addCellListener(GameOfWildlife.CellListener cellListener) {
-        this.cellListener = cellListener;
-        addMouseListener(this.cellListener);
-        addMouseMotionListener(this.cellListener);
+        addMouseListener(cellListener);
+        addMouseMotionListener(cellListener);
     }
 
     /**
@@ -106,6 +105,7 @@ class CanvasCell extends Canvas {
     /**
      * paint wird beim ersten Mal aufgerufen => initialisierung
      */
+    @Override
     public void paint(Graphics g) {
         update(g);
     }
@@ -126,20 +126,19 @@ class VisualGameOfLife extends Frame {
     VisualGameOfLife(int[][] grid) {
         super("Game of Life");
         // Groesse des Feldes anpassen aber mit min 300x300
-        int xMax = grid.length;
-        int yMax = grid[0].length;
-        int xFrame = xMax * 15;
-        int yFrame = yMax * 15;
-        xFrame = Math.max(300, xFrame);
-        yFrame = Math.max(300, yFrame);
-        setSize(xFrame, yFrame);
+        setSize(Math.max(300, grid.length * 15), Math.max(300, grid[0].length * 15));
+        // create a new canvas
         canvasInt = new CanvasInt(grid);
+        //add the canvas to the window
         add(canvasInt, BorderLayout.CENTER);
         addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent event) {
+                // close the window on x click
+                dispose();
                 System.exit(0);
             }
         });
+        //set the window visible
         setVisible(true);
     }
 
@@ -151,20 +150,19 @@ class VisualGameOfLife extends Frame {
     VisualGameOfLife(Cell[][] grid) {
         super("Game of Wildlife");
         // Groesse des Feldes anpassen aber mit min 300x300
-        int xMax = grid.length;
-        int yMax = grid[0].length;
-        int xFrame = xMax * 15;
-        int yFrame = yMax * 15;
-        xFrame = Math.max(300, xFrame);
-        yFrame = Math.max(300, yFrame);
-        setSize(xFrame, yFrame);
+        setSize(Math.max(300, grid.length * 15), Math.max(300, grid[0].length * 15));
+        // create a new canvas
         canvasCell = new CanvasCell(grid);
+        //add the canvas to the window
         add(canvasCell, BorderLayout.CENTER);
         addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent event) {
+                // close the window on x click
+                dispose();
                 System.exit(0);
             }
         });
+        //set the window visible
         setVisible(true);
     }
 

@@ -62,6 +62,7 @@ public class Cell {
 
     public void setAlive(boolean alive) {
         this.alive = alive;
+        // if not alive set color black
         if (!this.alive) {
             this.setColor(Color.BLACK);
         }
@@ -79,7 +80,7 @@ public class Cell {
 
     @Override
     public int hashCode() {
-        return Objects.hash(this.age, this.color.hashCode(), this.alive);
+        return Objects.hash(this.age, this.color, this.alive);
     }
 
     @Override

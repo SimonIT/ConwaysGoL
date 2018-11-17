@@ -68,6 +68,7 @@ public class Glider {
             for (int y = 0; y < gameOfLife.SIZE; ++y) {
                 golCells[x][y] = new Cell();
                 golEndCells[x][y] = new Cell();
+                // set age to match the hahscode
                 golEndCells[x][y].setAge(TIME_STEPS);
             }
         }

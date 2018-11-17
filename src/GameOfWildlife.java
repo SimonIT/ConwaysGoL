@@ -13,6 +13,11 @@ public class GameOfWildlife implements IGameOfLife {
     class CellListener implements MouseListener, MouseMotionListener {
         private VisualGameOfLife visualGameOfLife;
 
+        /**
+         * needed to access the window by the listener
+         *
+         * @param visualGameOfLife
+         */
         void setVisualGameOfLife(VisualGameOfLife visualGameOfLife) {
             this.visualGameOfLife = visualGameOfLife;
         }
@@ -48,18 +53,28 @@ public class GameOfWildlife implements IGameOfLife {
         }
 
         /**
+         * creates new cells or kills cells
+         *
          * @param e a mouse event
          */
         void changeGridOnMousePosition(MouseEvent e) {
-            int x = (int) ((float) e.getX() / (this.visualGameOfLife.getBounds().width - 1) * grid.length); // calculate the x array position from the mouse x position
-            int y = (int) (grid[0].length - (float) e.getY() / (this.visualGameOfLife.getBounds().height - 1) * grid[0].length); // calculate the y array position from the mouse y position
-            if (grid[0].length > x && x > -1 && grid.length > y && y > -1) { // if the mouse is on the grid
+            // store bounds for the calculation
+            Rectangle bounds = this.visualGameOfLife.getBounds();
+            // calculate the x array position from the mouse x position
+            int x = Math.round((float) e.getX() / (bounds.width - 1) * grid.length);
+            // calculate the y array position from the mouse y position
+            int y = Math.round(grid[0].length - (float) e.getY() / (bounds.height - 1) * grid[0].length);
+            // if the mouse is on the grid
+            if (grid[0].length > x && x > -1 && grid.length > y && y > -1) {
                 if (e.isShiftDown()) {
-                    grid[x][y].setAlive(false); // if shift is pressed  kill the cell
+                    // if shift is pressed  kill the cell
+                    grid[x][y].setAlive(false);
                 } else {
-                    grid[x][y] = Cell.createWithRandomColor(); // create a new random colored cell
+                    // create a new random colored cell
+                    grid[x][y] = Cell.createWithRandomColor();
                 }
-                visualGameOfLife.refresh(grid); // refresh the screen
+                // refresh the screen
+                visualGameOfLife.refresh(grid);
             }
         }
     }
@@ -110,6 +125,7 @@ public class GameOfWildlife implements IGameOfLife {
     public void init() {
         for (int x = 0; x < grid.length; ++x) {
             for (int y = 0; y < grid.length; ++y) {
+                // created a new cell with or without a color
                 grid[x][y] = rand.nextBoolean() ? Cell.createWithRandomColor() : new Cell();
             }
         }
@@ -217,7 +233,8 @@ public class GameOfWildlife implements IGameOfLife {
     @Deprecated
     @Override
     public int[][] getGrid() {
-        return null; // return null because we have here no int array and we have to match the interface
+        // return null because we have here no int array and we have to match the interface
+        return null;
     }
 
     /**
