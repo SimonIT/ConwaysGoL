@@ -156,6 +156,7 @@ class VisualGameOfLife extends Frame {
         //add the canvas to the window
         add(canvasInt, BorderLayout.CENTER);
         addWindowListener(new WindowAdapter() {
+            @Override
             public void windowClosing(WindowEvent event) {
                 // close the window on x click
                 dispose();
@@ -164,6 +165,15 @@ class VisualGameOfLife extends Frame {
         });
         //set the window to be visible
         setVisible(true);
+    }
+
+    /**
+     * necessary for cell listener mouse calculation
+     *
+     * @return bounds of canvas cell
+     */
+    Rectangle getCanvasCellBounds() {
+        return this.canvasCell.getBounds();
     }
 
     /**
@@ -180,6 +190,7 @@ class VisualGameOfLife extends Frame {
         //add the canvas to the window
         add(canvasCell, BorderLayout.CENTER);
         addWindowListener(new WindowAdapter() {
+            @Override
             public void windowClosing(WindowEvent event) {
                 // close the window on x click
                 dispose();

@@ -69,7 +69,7 @@ public class GameOfWildlife implements IGameOfLife {
          */
         void changeGridOnMousePosition(MouseEvent e) {
             // store bounds for the calculation
-            Rectangle bounds = this.visualGameOfLife.getBounds();
+            Rectangle bounds = this.visualGameOfLife.getCanvasCellBounds();
             // calculate the x array position from the mouse x position
             int x = Math.round((float) e.getX() / (bounds.width - 1) * X_SIZE);
             // calculate the y array position from the mouse y position
