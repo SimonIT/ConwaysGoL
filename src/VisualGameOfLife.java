@@ -168,15 +168,6 @@ class VisualGameOfLife extends Frame {
     }
 
     /**
-     * necessary for cell listener mouse calculation
-     *
-     * @return bounds of canvas cell
-     */
-    Rectangle getCanvasCellBounds() {
-        return this.canvasCell.getBounds();
-    }
-
-    /**
      * creates a window using the cell objects ("GameOfWildLife")
      *
      * @param grid: a Cell grid
@@ -199,6 +190,15 @@ class VisualGameOfLife extends Frame {
         });
         //set the window to be visible
         setVisible(true);
+    }
+
+    /**
+     * necessary for cell listener mouse calculation
+     *
+     * @return bounds of canvas cell
+     */
+    Rectangle getCanvasCellBounds() {
+        return this.canvasCell.getBounds();
     }
 
     /**

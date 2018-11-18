@@ -154,6 +154,7 @@ public class GameOfWildlife implements IGameOfLife {
     @Deprecated
     @Override
     public void showGrid() {
+        throw new UnsupportedOperationException();
     }
 
     /**
@@ -189,7 +190,7 @@ public class GameOfWildlife implements IGameOfLife {
     @Deprecated
     @Override
     public int getLiveNeighbors(int x, int y) {
-        return -1;
+        throw new UnsupportedOperationException();
     }
 
     /**
@@ -294,8 +295,8 @@ public class GameOfWildlife implements IGameOfLife {
     @Deprecated
     @Override
     public int[][] getGrid() {
-        // return null because we have here no int array and we have to match the interface
-        return null;
+        // throw exception because we have here no int array and we have to match the interface
+        throw new UnsupportedOperationException();
     }
 
     /**
