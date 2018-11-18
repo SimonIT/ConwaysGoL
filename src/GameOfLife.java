@@ -8,7 +8,7 @@ public class GameOfLife implements IGameOfLife {
     private int X_SIZE = IGameOfLife.SIZE;
     private int Y_SIZE = IGameOfLife.SIZE;
     // this 2D grid holds all cells in the form of integers
-    private int[][] grid = new int[IGameOfLife.SIZE][IGameOfLife.SIZE];
+    private int[][] grid = new int[X_SIZE][Y_SIZE];
     // random integers are needed for initialization of the grid
     private Random rand = new Random();
 
@@ -45,8 +45,8 @@ public class GameOfLife implements IGameOfLife {
     @Override
     public void init() {
         // iterate through every cell in grid
-        for (int x = 0; x < grid.length; ++x) {
-            for (int y = 0; y < grid.length; ++y) {
+        for (int x = 0; x < X_SIZE; ++x) {
+            for (int y = 0; y < Y_SIZE; ++y) {
                 // randomly (50% / 50%) set grid cells to be alive or dead
                 grid[x][y] = rand.nextBoolean() ? IGameOfLife.ALIVE : IGameOfLife.DEAD;
             }
@@ -114,8 +114,8 @@ public class GameOfLife implements IGameOfLife {
                     continue;
                 }
                 // x and y positions of this neighbor are determined; % is used to wrap around the edges (donut world)
-                int xNeighbor = (x + xCheck + IGameOfLife.SIZE) % IGameOfLife.SIZE;
-                int yNeighbor = (y + yCheck + IGameOfLife.SIZE) % IGameOfLife.SIZE;
+                int xNeighbor = (x + xCheck + X_SIZE) % X_SIZE;
+                int yNeighbor = (y + yCheck + Y_SIZE) % Y_SIZE;
                 // if this neighbor is alive; increment "neighborsTotal" by one
                 if (this.grid[xNeighbor][yNeighbor] == IGameOfLife.ALIVE) {
                     ++neighborsTotal;
@@ -132,10 +132,10 @@ public class GameOfLife implements IGameOfLife {
     @Override
     public void runGeneration() {
         // "newGrid" will contain the next generation
-        int[][] newGrid = new int[IGameOfLife.SIZE][IGameOfLife.SIZE];
+        int[][] newGrid = new int[X_SIZE][Y_SIZE];
         // iterate through all cells of the grid
-        for (int x = 0; x < IGameOfLife.SIZE; ++x) {
-            for (int y = 0; y < IGameOfLife.SIZE; ++y) {
+        for (int x = 0; x < X_SIZE; ++x) {
+            for (int y = 0; y < Y_SIZE; ++y) {
                 // determine the amount of alive neighbors
                 int neighborsAlive = getLiveNeighbors(x, y);
                 // set cells to be dead or alive depending on their current state and the amount of their neighbors
@@ -165,7 +165,7 @@ public class GameOfLife implements IGameOfLife {
     }
 
     /**
-     * get private grid from
+     * get private grid using this method
      *
      * @return grid
      */

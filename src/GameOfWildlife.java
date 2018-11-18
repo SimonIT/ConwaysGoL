@@ -8,6 +8,16 @@ import java.util.Random;
  * advanced version of "Conway's Game of Life"; cells with dynamic color are used
  */
 public class GameOfWildlife implements IGameOfLife {
+    // width and height of grid are defined as X_SIZE and Y_SIZE
+    private int X_SIZE = IGameOfLife.SIZE;
+    private int Y_SIZE = IGameOfLife.SIZE;
+    // new object of class CellListener is created for being able to generate new alive cells on grid
+    private CellListener cellListener;
+    // this 2D grid holds all cells in the form of Cell objects;
+    private Cell[][] grid = new Cell[X_SIZE][Y_SIZE];
+    // random integers are needed for initialization of the grid
+    private Random rand = new Random();
+
     // subclass CellListener is used for being able to create new alive cells by clicking on GUI
     // TODO: Simon's comment
     class CellListener implements MouseListener, MouseMotionListener {
@@ -61,11 +71,11 @@ public class GameOfWildlife implements IGameOfLife {
             // store bounds for the calculation
             Rectangle bounds = this.visualGameOfLife.getBounds();
             // calculate the x array position from the mouse x position
-            int x = Math.round((float) e.getX() / (bounds.width - 1) * grid.length);
+            int x = Math.round((float) e.getX() / (bounds.width - 1) * X_SIZE);
             // calculate the y array position from the mouse y position
-            int y = Math.round(grid[0].length - (float) e.getY() / (bounds.height - 1) * grid[0].length);
+            int y = Math.round(Y_SIZE - (float) e.getY() / (bounds.height - 1) * Y_SIZE);
             // if the mouse is on the grid
-            if (grid[0].length > x && x > -1 && grid.length > y && y > -1) {
+            if (Y_SIZE > x && x > -1 && X_SIZE > y && y > -1) {
                 if (e.isShiftDown()) {
                     // if shift is pressed  kill the cell
                     grid[x][y].setAlive(false);
@@ -78,13 +88,6 @@ public class GameOfWildlife implements IGameOfLife {
             }
         }
     }
-
-    // new object of class CellListener is created for being able to generate new alive cells on grid
-    private CellListener cellListener;
-    // this 2D grid holds all cells in the form of Cell objects;
-    private Cell[][] grid = new Cell[IGameOfLife.SIZE][IGameOfLife.SIZE];
-    // random integers are needed for initialization of the grid
-    private Random rand = new Random();
 
     /**
      * start of program
@@ -118,65 +121,85 @@ public class GameOfWildlife implements IGameOfLife {
     }
 
     GameOfWildlife() {
-        this.cellListener = new CellListener(); // create a new cell listener
+        // create a new cell listener
+        this.cellListener = new CellListener();
     }
 
+    /**
+     * randomly fill grid with alive and dead cells
+     */
     @Override
     public void init() {
-        for (int x = 0; x < grid.length; ++x) {
-            for (int y = 0; y < grid.length; ++y) {
-                // created a new cell with or without a color
+        // iterate through every cell in grid
+        for (int x = 0; x < X_SIZE; ++x) {
+            for (int y = 0; y < Y_SIZE; ++y) {
+                // // randomly (50% / 50%) set grid cells to be alive (with random color) or dead
                 grid[x][y] = rand.nextBoolean() ? Cell.createWithRandomColor() : new Cell();
             }
         }
     }
 
     /**
-     * Not implemented because we can't display mixed colors
+     * Not implemented because we can't display mixed colors using console output
      */
     @Deprecated
     @Override
     public void showGrid() {
     }
 
+    /**
+     * set a specific cell in grid to be alive
+     *
+     * @param x: x position of cell
+     * @param y: y position of cell
+     */
     @Override
     public void setAlive(int x, int y) {
         this.grid[x][y].setAlive(true);
     }
 
+    /**
+     * set a specific cell in grid to be dead
+     *
+     * @param x  x position of cell
+     * @param y: y position of cell
+     */
     @Override
     public void setDead(int x, int y) {
         this.grid[x][y].setAlive(false);
     }
 
+    // "getLiveNeighbors" is not needed by this class; instead "getLiveNeighborsAndMixColor" is used
+    @Deprecated
     @Override
     public int getLiveNeighbors(int x, int y) {
-        int neighborsTotal = 0;
-        for (int xCheck = -1; xCheck < 2; ++xCheck) {
-            for (int yCheck = -1; yCheck < 2; ++yCheck) {
-                if (xCheck == 0 && yCheck == 0) {
-                    continue;
-                }
-                int xNeighbor = (x + xCheck + IGameOfLife.SIZE) % IGameOfLife.SIZE;
-                int yNeighbor = (y + yCheck + IGameOfLife.SIZE) % IGameOfLife.SIZE;
-                if (this.grid[xNeighbor][yNeighbor].getAlive()) {
-                    ++neighborsTotal;
-                }
-            }
-        }
-        return neighborsTotal;
+        return 0;
     }
 
-    int getLiveNeighborsAndMixColor(int x, int y, Cell c) {
+    /**
+     * determine how many of the 8 neighbors of a specific cell are alive and determine the average color of neighbors
+     *
+     * @param x: x position of cell
+     * @param y: y position of cell
+     * @param c: Cell object passed by reference to obtain mixed color
+     * @return amount of alive neighboring cells
+     */
+    private int getLiveNeighborsAndMixColor(int x, int y, Cell c) {
+        // "neighborsTotal" is 0 at first and will be returned later
         int neighbors = 0;
+        // r, g and b will be the color values (red, green, blue) for the mixed color of the cell in question
         int r = c.getColor().getRed(), g = c.getColor().getGreen(), b = c.getColor().getBlue();
+        // iterate through all neighbors within a 3x3 grid around the cell
         for (int xCheck = -1; xCheck < 2; ++xCheck) {
             for (int yCheck = -1; yCheck < 2; ++yCheck) {
+                // cell that wants to know the amount of its neighbors is not included in the check
                 if (xCheck == 0 && yCheck == 0) {
                     continue;
                 }
-                int xNeighbor = (x + xCheck + IGameOfLife.SIZE) % IGameOfLife.SIZE;
-                int yNeighbor = (y + yCheck + IGameOfLife.SIZE) % IGameOfLife.SIZE;
+                // x and y positions of this neighbor are determined; % is used to wrap around the edges (donut world)
+                int xNeighbor = (x + xCheck + X_SIZE) % X_SIZE;
+                int yNeighbor = (y + yCheck + Y_SIZE) % Y_SIZE;
+                // if this neighbor is alive; increment "neighborsTotal" by one and update values to corresponding variables
                 if (this.grid[xNeighbor][yNeighbor].getAlive()) {
                     ++neighbors;
                     r += this.grid[xNeighbor][yNeighbor].getColor().getRed();
@@ -186,27 +209,37 @@ public class GameOfWildlife implements IGameOfLife {
             }
         }
 
+        // average color is applied to Cell object c; "neighbors + 1" is used to avoid dividing by zero
         c.setColor(new Color(Math.round((float) r / (neighbors + 1)), Math.round((float) g / (neighbors + 1)), Math.round((float) b / (neighbors + 1))));
+        // return the total amount of neighbors of cell at (x, y)
         return neighbors;
     }
 
+    /**
+     * this method provides the logic for creating the next generation of the simulation
+     */
     @Override
     public void runGeneration() {
-        Cell[][] newGrid = new Cell[IGameOfLife.SIZE][IGameOfLife.SIZE];
-
-        for (int x = 0; x < IGameOfLife.SIZE; ++x) {
-            for (int y = 0; y < IGameOfLife.SIZE; ++y) {
+        // "newGrid" will contain the next generation
+        Cell[][] newGrid = new Cell[X_SIZE][Y_SIZE];
+        // iterate through all cells of the grid
+        for (int x = 0; x < X_SIZE; ++x) {
+            for (int y = 0; y < Y_SIZE; ++y) {
+                // determine the amount of alive neighbors and apply mixed color to "mixexdCell" in case it is needed
                 Cell mixedCell = new Cell(grid[x][y]);
                 int neighborsAlive = getLiveNeighborsAndMixColor(x, y, mixedCell);
 
+                // set cells to be dead or alive depending on their current state and the amount of their neighbors
                 newGrid[x][y] = new Cell();
                 if (neighborsAlive < 2 || neighborsAlive > 3) {
                     newGrid[x][y].setAlive(false);
                 } else if (neighborsAlive == 3) {
                     newGrid[x][y].setAlive(true);
                     if (grid[x][y].getAlive()) {
+                        // adjust color of this cell to the colors of its neighbors
                         newGrid[x][y] = mixedCell;
                     } else {
+                        // if cell is born just now, set its color to be random
                         newGrid[x][y] = Cell.createWithRandomColor();
                     }
                 } else {
@@ -216,13 +249,19 @@ public class GameOfWildlife implements IGameOfLife {
                         newGrid[x][y].setAlive(false);
                     }
                 }
+                // update age attribute
                 newGrid[x][y].setAge(grid[x][y].getAge() + 1);
             }
         }
-
+        //set grid to be the updated grid
         this.grid = newGrid;
     }
 
+    /**
+     * runs multiple simulation steps
+     *
+     * @param howMany: amount of steps to be simulated
+     */
     @Override
     public void runGenerations(int howMany) {
         for (int i = 0; i < howMany; ++i) {

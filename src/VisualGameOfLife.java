@@ -12,35 +12,44 @@ import java.awt.event.*;
 class CanvasInt extends Canvas {
     private int grid[][];
 
+    /**
+     * constructor
+     *
+     * @param grid: provides reference to grid
+     */
     CanvasInt(int[][] grid) {
         this.grid = grid;
     }
 
     /**
-     * @param grid the grid to set
+     * @param grid: the grid to set
      */
     void setGrid(int[][] grid) {
         this.grid = grid;
     }
 
     /**
-     * update : wird bei repaint() aufgerufen
+     * called in repaint()
+     *
+     * @param g: java.awt.Graphics object
      */
     @Override
     public void update(Graphics g) {
-        // Berechne die Breite und Höhe der Felder
+        // calculate width and height of fields
         Rectangle frameBounds = getBounds();
-        int width = frameBounds.width - 1;
-        int height = frameBounds.height - 1;
-        double xSize = (double) width / grid.length;
-        double ySize = (double) height / grid[0].length;
-        for (int xPos = 0; xPos < grid.length; xPos++) {
-            for (int yPos = 0; yPos < grid[0].length; yPos++) {
+
+        double xSize = (double) (frameBounds.width - 1) / grid.length;
+        double ySize = (double) (frameBounds.height - 1) / grid[0].length;
+        // iterate through all fields on grid
+        for (int xPos = 0; xPos < grid.length; ++xPos) {
+            for (int yPos = 0; yPos < grid[0].length; ++yPos) {
+                // set cell to be yellow if alive or black if dead
                 if (grid[xPos][yPos] == IGameOfLife.ALIVE) {
                     g.setColor(Color.YELLOW);
                 } else {
                     g.setColor(Color.BLACK);
                 }
+                // actually color this cell
                 g.fillRect((int) (xSize * xPos), (int) (ySize * (grid[0].length - 1 - yPos)), (int) xSize + 1,
                         (int) ySize + 1);
             }
@@ -48,7 +57,9 @@ class CanvasInt extends Canvas {
     }
 
     /**
-     * paint wird beim ersten Mal aufgerufen => initialisierung
+     * paint will be called automatically
+     *
+     * @param g: java.awt.Graphics object
      */
     @Override
     public void paint(Graphics g) {
@@ -62,14 +73,19 @@ class CanvasInt extends Canvas {
 class CanvasCell extends Canvas {
     private Cell grid[][];
 
+    /**
+     * constructor
+     *
+     * @param grid: provides reference to grid
+     */
     CanvasCell(Cell[][] grid) {
         this.grid = grid;
     }
 
     /**
-     * sets the required listeners for the mouse drawing
+     * sets the required listeners for being able to draw with mouse
      *
-     * @param cellListener a cell listener
+     * @param cellListener: a cell listener
      */
     void addCellListener(GameOfWildlife.CellListener cellListener) {
         addMouseListener(cellListener);
@@ -77,24 +93,30 @@ class CanvasCell extends Canvas {
     }
 
     /**
-     * @param grid the grid to set
+     * sets grid
+     *
+     * @param grid: the grid to set
      */
     void setGrid(Cell[][] grid) {
         this.grid = grid;
     }
 
     /**
-     * update : wird bei repaint() aufgerufen
+     * called in repaint()
+     *
+     * @param g: java.awt.Graphics object
      */
     @Override
     public void update(Graphics g) {
-        // Berechne die Breite und Höhe der Felder
+        // calculate width and height of fields
         Rectangle frameBounds = getBounds();
 
         double xSize = (double) (frameBounds.width - 1) / grid.length;
         double ySize = (double) (frameBounds.height - 1) / grid[0].length;
-        for (int xPos = 0; xPos < grid.length; xPos++) {
-            for (int yPos = 0; yPos < grid[0].length; yPos++) {
+        // iterate through all fields on grid
+        for (int xPos = 0; xPos < grid.length; ++xPos) {
+            for (int yPos = 0; yPos < grid[0].length; ++yPos) {
+                // set wanted color
                 g.setColor(grid[xPos][yPos].getColor());
                 g.fillRect((int) (xSize * xPos), (int) (ySize * (grid[0].length - 1 - yPos)), (int) xSize + 1,
                         (int) ySize + 1);
@@ -103,7 +125,9 @@ class CanvasCell extends Canvas {
     }
 
     /**
-     * paint wird beim ersten Mal aufgerufen => initialisierung
+     * paint will be called automatically
+     *
+     * @param g: java.awt.Graphics object
      */
     @Override
     public void paint(Graphics g) {
@@ -112,20 +136,20 @@ class CanvasCell extends Canvas {
 }
 
 /**
- * the window
+ * GUI window
  */
 class VisualGameOfLife extends Frame {
     private CanvasInt canvasInt;
     private CanvasCell canvasCell;
 
     /**
-     * creates aa windows from int array
+     * creates a window using the int array ("GameOfLife")
      *
      * @param grid: a int grid
      */
     VisualGameOfLife(int[][] grid) {
         super("Game of Life");
-        // Groesse des Feldes anpassen aber mit min 300x300
+        // adjust size of window to size of grid; min-size is 300x300
         setSize(Math.max(300, grid.length * 15), Math.max(300, grid[0].length * 15));
         // create a new canvas
         canvasInt = new CanvasInt(grid);
@@ -138,18 +162,18 @@ class VisualGameOfLife extends Frame {
                 System.exit(0);
             }
         });
-        //set the window visible
+        //set the window to be visible
         setVisible(true);
     }
 
     /**
-     * creates a window from cell objects
+     * creates a window using the cell objects ("GameOfWildLife")
      *
-     * @param grid: a cell grid
+     * @param grid: a Cell grid
      */
     VisualGameOfLife(Cell[][] grid) {
         super("Game of Wildlife");
-        // Groesse des Feldes anpassen aber mit min 300x300
+        // adjust size of window to size of grid; min-size is 300x300
         setSize(Math.max(300, grid.length * 15), Math.max(300, grid[0].length * 15));
         // create a new canvas
         canvasCell = new CanvasCell(grid);
@@ -162,14 +186,14 @@ class VisualGameOfLife extends Frame {
                 System.exit(0);
             }
         });
-        //set the window visible
+        //set the window to be visible
         setVisible(true);
     }
 
     /**
-     * Methode zum Neuzeichen des Gitters
+     * method to paint the int grid again
      *
-     * @param grid the new grid
+     * @param grid: the new grid
      */
     void refresh(int[][] grid) {
         canvasInt.setGrid(grid);
@@ -177,7 +201,7 @@ class VisualGameOfLife extends Frame {
     }
 
     /**
-     * Methode zum Neuzeichen des Gitters
+     * method to paint the Cell grid again
      *
      * @param grid the new grid
      */
@@ -187,9 +211,9 @@ class VisualGameOfLife extends Frame {
     }
 
     /**
-     * adds the a listener to canvas
+     * adds a listener to canvas
      *
-     * @param cellListener: a cell listener
+     * @param cellListener: a Cell listener
      */
     void addCellListener(GameOfWildlife.CellListener cellListener) {
         canvasCell.addCellListener(cellListener);

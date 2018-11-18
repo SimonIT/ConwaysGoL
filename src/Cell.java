@@ -2,7 +2,7 @@ import java.awt.Color;
 import java.util.Objects;
 import java.util.Random;
 
-// objects of class Cell are needed in GameOfWildlife
+// objects of class Cell are needed in GameOfWildlife to store additional information such as the color of a cell
 public class Cell {
     private int age;
     private Color color;
@@ -68,21 +68,40 @@ public class Cell {
         }
     }
 
+    /**
+     * overwriting "equals" is necessary for performing test cases
+     *
+     * @param obj: object that is compared to this
+     * @return if the two objects in question are equal
+     */
     @Override
     public boolean equals(Object obj) {
         if (obj == null) return false;
         if (obj == this) return true;
-        if (!obj.getClass().equals(this.getClass())) return false;
+        // check if obejcts are of same class
+        if (!obj.getClass().equals(this.getClass())) {
+            return false;
+        }
         Cell that = (Cell) obj;
+        // cell objects should have the same age, the same color and should both be alive to be seen equal
         return this.age == that.getAge() && this.color.equals(that.getColor()) && this.alive == that.getAlive();
     }
 
-
+    /**
+     * overwriting "hashCode" is necessary for performing test cases
+     *
+     * @return hash code
+     */
     @Override
     public int hashCode() {
         return Objects.hash(this.age, this.color, this.alive);
     }
 
+    /**
+     * for neat representation on screen, overwrite "toString" method
+     *
+     * @return string representation of Cell
+     */
     @Override
     public String toString() {
         return String.format("Cell [age=%s] [%s] [alive=%s]", this.age, this.color, this.alive);
