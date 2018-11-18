@@ -183,13 +183,13 @@ public class GameOfWildlife implements IGameOfLife {
      *
      * @param x x-position
      * @param y y-position
-     * @return 0
+     * @return -1
      * @see #getLiveNeighborsAndMixColor
      */
     @Deprecated
     @Override
     public int getLiveNeighbors(int x, int y) {
-        return 0;
+        return -1;
     }
 
     /**
