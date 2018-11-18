@@ -19,19 +19,23 @@ public class GameOfWildlife implements IGameOfLife {
     private Random rand = new Random();
 
     // subclass CellListener is used for being able to create new alive cells by clicking on GUI
-    // TODO: Simon's comment
     class CellListener implements MouseListener, MouseMotionListener {
         private VisualGameOfLife visualGameOfLife;
 
         /**
          * needed to access the window by the listener
          *
-         * @param visualGameOfLife
+         * @param visualGameOfLife: a visualGameOfLife object
          */
         void setVisualGameOfLife(VisualGameOfLife visualGameOfLife) {
             this.visualGameOfLife = visualGameOfLife;
         }
 
+        /**
+         * called while a button on the mouse is clicked an hovers over the canvas
+         *
+         * @param e raised mouseEvent
+         */
         @Override
         public void mouseDragged(MouseEvent e) {
             changeGridOnMousePosition(e);
@@ -41,6 +45,11 @@ public class GameOfWildlife implements IGameOfLife {
         public void mouseMoved(MouseEvent e) {
         }
 
+        /**
+         * called once if one click is performed by the mouse
+         *
+         * @param e raised mouseEvent
+         */
         @Override
         public void mouseClicked(MouseEvent e) {
             changeGridOnMousePosition(e);
@@ -169,7 +178,14 @@ public class GameOfWildlife implements IGameOfLife {
         this.grid[x][y].setAlive(false);
     }
 
-    // "getLiveNeighbors" is not needed by this class; instead "getLiveNeighborsAndMixColor" is used
+    /**
+     * "getLiveNeighbors" is not needed by this class; instead "getLiveNeighborsAndMixColor" is used
+     *
+     * @param x x-position
+     * @param y y-position
+     * @return 0
+     * @see #getLiveNeighborsAndMixColor
+     */
     @Deprecated
     @Override
     public int getLiveNeighbors(int x, int y) {
@@ -269,6 +285,12 @@ public class GameOfWildlife implements IGameOfLife {
         }
     }
 
+    /**
+     * we have here no int array
+     *
+     * @return null
+     * @see #getCellGrid
+     */
     @Deprecated
     @Override
     public int[][] getGrid() {
