@@ -1,3 +1,9 @@
+# ConwaysGoL
+
+![Build ConwaysGoL](https://github.com/SimonIT/ConwaysGoL/workflows/Build%20ConwaysGoL/badge.svg)
+
+A project by [@codingWhale13](https://github.com/codingWhale13) and [@SimonIT](https://github.com/SimonIT)
+
 # Regelungen zur Abgabe
 
 Hier das bitte InteliJ Project als zip-File hochladen. Es ist ein ausgedrucktes Protokoll abzugeben. Spätestens am Montag 19.11.2018 in mein Fach. Es gelten die üblichen Regelungen
